@@ -26,8 +26,11 @@ class MainPageLocators:
     PROFILE_PAGE = (By.XPATH, ".//a[@href = '/account']")
     CONSTRUCTOR_LABEL = (By.XPATH, ".//*[text()='Соберите бургер']")
     BUN_SPAN = (By.XPATH, ".//span[text()='Булки']")
+    BUN_DIV = (By.XPATH, ".//span[text()='Булки']/parent::div")
     SAUCES_SPAN = (By.XPATH, ".//span[text()='Соусы']")
+    SAUCES_DIV = (By.XPATH, ".//span[text()='Соусы']/parent::div")
     FILLING_SPAN = (By.XPATH, ".//span[text()='Начинки']/parent::div")
+    FILLING_DIV = (By.XPATH, ".//span[text()='Начинки']/parent::div")
 
 class ForgotPasswordPageLocators:
     RESTORE_BUTTON = (By.XPATH, ".//button[text()='Восстановить']")

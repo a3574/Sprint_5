@@ -1,18 +1,31 @@
 import pytest
 from selenium.webdriver.support import expected_conditions
-from locators import LoginPageLocators, ProfilePageLocators, MainPageLocators
+from locators import RegisterPageLocators, LoginPageLocators, ProfilePageLocators, MainPageLocators
 from selenium.webdriver.support.wait import WebDriverWait
-from tests_registration import Registration
-from tests_entrance import Entrance
-@pytest.mark.usefixtures("varius_user_data")
-class TestLogout(Registration, Entrance):
-    def test_logout_from_profile_page_success(self, varius_user_data):
+from helpers import UserData
+
+class TestLogout():
+    def test_logout_from_profile_page_success(self):
         # Регистрируем нового пользователя
-        self.registered(self.login, self.email, self.password)
-        # Ждем доступности формы входа
+        user_data = UserData.get_user_data()
+        # Переходим на форму регистрации
+        self.driver.get("https://stellarburgers.nomoreparties.site/register")
+        # Заполняем форму регистрации
+        self.driver.find_element(*RegisterPageLocators.LOGIN_FIELD).send_keys(user_data['login'])
+        self.driver.find_element(*RegisterPageLocators.EMAIL_FIELD).send_keys(user_data['email'])
+        self.driver.find_element(*RegisterPageLocators.PASSWORD_FIELD).send_keys(user_data['password'])
+        self.driver.find_element(*RegisterPageLocators.REGISTER_BUTTON).click()
+
+        # Ожидаем переход на форму входа
         WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(LoginPageLocators.ENTRY_LABEL))
-        # Выполняем вход
-        self.entrance(self.email, self.password)
+
+        # Заполняем форму входа
+        WebDriverWait(self.driver, 3).until(
+            expected_conditions.visibility_of_element_located(LoginPageLocators.ENTRY_BUTTON))
+        self.driver.find_element(*LoginPageLocators.EMAIL_FIELD).send_keys(user_data['email'])
+        self.driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(user_data['password'])
+        self.driver.find_element(*LoginPageLocators.ENTRY_BUTTON).click()
+
         # Ожидаем переход на главную страницу, где доступна ссылка на ЛК
         WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(MainPageLocators.PROFILE_PAGE))
         #Переходим в ЛК
